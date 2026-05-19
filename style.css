@@ -1,0 +1,375 @@
+/* ===== BASE ===== */
+
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: url(assets/background.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* phone-like centered app */
+.app-shell {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ===== SCREENS ===== */
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border-radius: 20px;
+  overflow: hidden;
+
+  margin-top: 20px;
+
+  /* magical glass frame feel */
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+}
+
+/* ===== CARD ===== */
+
+.card, .game-card {
+  background: cadetblue;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* ===== TEXT ===== */
+
+.title {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.app-title {
+  font-size: clamp(3rem, 10vw, 4.5rem);
+
+  margin: 0;
+  margin-bottom: 8px;
+
+  text-align: center;
+
+  font-weight: 900;
+  letter-spacing: 2px;
+
+  /* dreamy gradient */
+  background: linear-gradient(
+    180deg,
+    #d9ffd0,
+    #9fe88d,
+    #7bc96f
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  /* soft magical depth */
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.15),
+    0 0 12px rgba(170,255,170,.25);
+
+  position: relative;
+
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+
+/* tiny sparkle leaves */
+.app-title::before,
+.app-title::after {
+  position: absolute;
+  font-size: .8rem;
+  top: 8px;
+}
+
+.app-title::before {
+  content: "🌱";
+  left: -18px;
+}
+
+.app-title::after {
+  content: "🌱";
+  right: -18px;
+}
+
+/* subtle movement */
+@keyframes gentleFloat {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.app-title:hover {
+  transform: scale(1.03);
+  transition: transform .3s ease;
+}
+
+.subtitle {
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.label {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  display: block;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ===== INPUT ===== */
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+/* ===== OPTIONS ===== */
+
+.options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.option-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* hover state */
+.option-btn:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+  border-color: rgba(251, 194, 235, 0.5);
+}
+
+/* active (click) state */
+.option-btn:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* selected state */
+.option-btn.selected {
+  border: 2px solid #fbc2eb;
+  background: rgba(251, 194, 235, 0.2);
+  transform: scale(1.05);
+}
+
+/* disabled start button */
+.primary-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* sprout cards */
+
+.sprout-card {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  width: 100%;       /* IMPORTANT */
+  min-height: 140px;
+
+  border-radius: 14px;
+  
+}
+
+.sprout-preview {
+  width: 70%;
+  max-width: 90px;
+  height: auto;
+
+  object-fit: contain;
+
+  pointer-events: none;
+}
+
+.sprout-card span {
+  margin-top: 8px;
+
+  font-size: clamp(.65rem, 2vw, .85rem);
+
+  text-align: center;
+}
+
+.sprout-card:hover .sprout-preview {
+  transform: scale(1.08);
+}
+
+.sprout-card span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ===== RETRO BUTTONS ===== */
+
+.primary-btn, .retro-btn {
+  margin-top: 12px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 12px;
+
+  background: linear-gradient(180deg, #6a5acd, #4b3fb3);
+  border: 2px solid #2e2a6b;
+
+  color: white;
+  font-weight: bold;
+
+  box-shadow: 0 4px 0 #2a255f;
+  cursor: pointer;
+}
+
+.retro-btn {
+  width: auto;
+  flex: 1;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ===== GAME AREA ===== */
+
+.background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.1) brightness(0.9);
+}
+
+.pet-area {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 2;
+}
+
+.pet-sprite {
+  font-size: 64px;
+  margin-bottom: 6px;
+}
+
+#pet-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  width: 100%;
+}
+
+/* ===== STATS ===== */
+
+.stats {
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+.stat {
+  margin-bottom: 8px;
+}
+
+.bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar div {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+}
+
+/* ===== MOOD ===== */
+
+.mood {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+
+@media (min-width: 768px) {
+  .scene {
+    height: 320px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 28px;
+  }
+
+  .game-card {
+    padding: 28px;
+  }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cosy Pet App</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- SETUP SCREEN -->
+    <div id="setup-screen" class="screen active">
+      <div class="card">
+
+        <h1 class="title">✨ welcome to ✨</h1>
+        <h1 class="app-title">
+        sprouts
+        </h1>
+        <p class="subtitle">create your little pocket companion</p>
+
+        <input id="pet-name" type="text" placeholder="Name your pet..." />
+
+        <label class="label">Choose your Sprout</label>
+
+        <div class="options" id="pet-options">
+
+        <button class="option-btn sprout-card" data-pet="earth">
+        <img src="assets/happy-earth-sprout.png" alt="Earth Sprout" class="sprout-preview">
+        <span>Earth Sprout</span>
+        </button>
+
+        <button class="option-btn sprout-card" data-pet="moon">
+        <img src="assets/happy-moon-sprout.png" alt="Moon Sprout" class="sprout-preview">
+        <span>Moon Sprout</span>
+        </button>
+
+        <button class="option-btn sprout-card" data-pet="star">
+        <img src="assets/happy-star-sprout.png" alt="Star Sprout" class="sprout-preview">
+        <span>Star Sprout</span>
+        </button>
+
+        </div>
+
+        <label class="label">Choose a background</label>
+        <!-- BACKGROUND OPTIONS -->
+        <div class="options" id="pet-options">
+
+        <button class="option-btn sprout-card" data-bg="forest">
+        <img src="assets/forest.png" alt="Forest Theme" class="sprout-preview">
+        <span>Forest</span>
+        </button>
+
+        <button class="option-btn sprout-card" data-bg="night">
+        <img src="assets/night.png" alt="Night Theme" class="sprout-preview">
+        <span>Night</span>
+        </button>
+
+        <button class="option-btn sprout-card" data-bg="cottage">
+        <img src="assets/cottage.png" alt="Cottage Theme" class="sprout-preview">
+        <span>Cottage</span>
+        </button>
+
+        </div>
+
+        <!-- START BUTTON (start disabled by default) -->
+        <button id="start-btn" class="primary-btn" disabled>
+        start
+        </button>
+
+      </div>
+    </div>
+
+    <!-- MAIN PET SCREEN -->
+    <div id="game-screen" class="screen hidden">
+
+      <div class="game-card">
+        <div class="scene">
+        <div id="background" class="background"></div>
+
+        <div class="top-info">
+          <h2 id="pet-name-display">Pet Name</h2>
+        </div>
+
+        <div class="pet-area">
+          <div id="pet-sprite" class="pet-sprite">
+            🐱
+          </div>
+
+          <div id="mood-text" class="mood">
+            ...
+          </div>
+        </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">🍗 Hunger <div class="bar"><div id="hunger-bar"></div></div></div>
+          <div class="stat">❤️ Happy <div class="bar"><div id="happy-bar"></div></div></div>
+          <div class="stat">⚡ Energy <div class="bar"><div id="energy-bar"></div></div></div>
+        </div>
+
+        <div class="controls">
+          <button class="retro-btn" id="feed-btn">Feed</button>
+          <button class="retro-btn" id="play-btn">Play</button>
+          <button class="retro-btn" id="rest-btn">Rest</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
