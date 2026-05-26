@@ -35,10 +35,11 @@ function handleSelection(containerId, key) {
       validateForm();
     });
   });
+
 }
 
 handleSelection("pet-options", "pet");
-handleSelection("bg-options", "background"); // ✅ FIXED
+handleSelection("bg-options", "background"); 
 
 /* =========================
    NAME INPUT VALIDATION
