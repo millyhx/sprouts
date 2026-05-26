@@ -24,6 +24,16 @@ body {
   padding: 20px 0;
 }
 
+/* ===== ACCESSABILITY OPTIONS ===== */
+.high-contrast {
+  filter: contrast(1.4) saturate(1.2);
+}
+
+.reduced-motion * {
+  animation: none !important;
+  transition: none !important;
+}
+
 /* phone-style centered container */
 
 .app-shell {

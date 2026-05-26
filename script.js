@@ -171,4 +171,47 @@ function startMusic() {
   });
 }
 
+document.getElementById("toggle-music").onclick = () => {
+  musicEnabled = !musicEnabled;
 
+  if (musicEnabled) {
+    music.play();
+  } else {
+    music.pause();
+  }
+};
+
+/* =========================
+   SETTINGS MODAL LOGIC
+========================= */
+const modal = document.getElementById("settings-modal");
+
+function openSettings() {
+  modal.classList.remove("hidden");
+}
+
+function closeSettings() {
+  modal.classList.add("hidden");
+}
+
+document.getElementById("settings-btn-setup").onclick = openSettings;
+document.getElementById("settings-btn-game").onclick = openSettings;
+document.getElementById("close-settings").onclick = closeSettings;
+
+/* =========================
+   SETTINGS MODAL LOGIC - ACCESSABILITY OPTIONS
+========================= */
+
+let highContrast = false;
+
+document.getElementById("toggle-contrast").onclick = () => {
+  highContrast = !highContrast;
+  document.body.classList.toggle("high-contrast", highContrast);
+};
+
+let reducedMotion = false;
+
+document.getElementById("toggle-reduced-motion").onclick = () => {
+  reducedMotion = !reducedMotion;
+  document.body.classList.toggle("reduced-motion", reducedMotion);
+};
