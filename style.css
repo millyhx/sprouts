@@ -8,12 +8,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
 
-  background: url("assets/background.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-
+  background: #2f3e46; /* default fallback (game mode) */
   color: white;
 
   display: flex;
@@ -22,6 +17,13 @@ body {
 
   min-height: 100dvh;
   padding: 20px 0;
+}
+
+#setup-screen.active ~ body,
+body:has(#setup-screen.active) {
+  background: url("assets/background.png");
+  background-size: cover;
+  background-position: center;
 }
 
 /* ===== ACCESSABILITY OPTIONS ===== */
@@ -374,6 +376,27 @@ input {
 .pet-sprite {
   font-size: 64px;
   margin-bottom: 6px;
+}
+
+.pet-sprite img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+
+  animation: floaty 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes floaty {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 /* ===== STATS ===== */

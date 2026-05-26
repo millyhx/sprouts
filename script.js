@@ -18,6 +18,12 @@ const backgroundImages = {
   cottage: "assets/cottage.png"
 };
 
+const petSprites = {
+  earth: "assets/happy-earth-sprout.png",
+  moon: "assets/happy-moon-sprout.png",
+  star: "assets/happy-star-sprout.png"
+};
+
 /* =========================
    OPTION SELECTION SYSTEM
 ========================= */
@@ -105,7 +111,7 @@ function loadGame() {
   gameScreen.classList.add("active");
 
   document.getElementById("pet-name-display").innerText = pet.name;
-  document.getElementById("pet-sprite").innerText = pet.pet;
+  document.getElementById("pet-sprite-img").src = petSprites[pet.pet];
 
   applyBackground();
   updateUI();
