@@ -12,34 +12,37 @@ let petConfig = {
   background: ""
 };
 
+const backgroundImages = {
+  forest: "assets/forest.png",
+  night: "assets/night.png",
+  cottage: "assets/cottage.png"
+};
+
 /* =========================
    OPTION SELECTION SYSTEM
 ========================= */
 
 function handleSelection(containerId, key) {
   const container = document.getElementById(containerId);
+  if (!container) return;
 
   container.querySelectorAll(".option-btn").forEach(btn => {
     btn.addEventListener("click", () => {
 
-      // clear previous selection
       container.querySelectorAll(".option-btn")
         .forEach(b => b.classList.remove("selected"));
 
-      // set selected UI state
       btn.classList.add("selected");
 
-      // IMPORTANT FIX:
       petConfig[key] = btn.dataset[key];
 
       validateForm();
     });
   });
-
 }
 
 handleSelection("pet-options", "pet");
-handleSelection("bg-options", "background"); 
+handleSelection("bg-options", "background");
 
 /* =========================
    NAME INPUT VALIDATION
@@ -47,7 +50,6 @@ handleSelection("bg-options", "background");
 
 nameInput.addEventListener("input", () => {
   let value = nameInput.value.trim();
-
   value = value.replace(/[^a-zA-Z0-9\s'-]/g, "");
 
   petConfig.name = value;
@@ -107,22 +109,45 @@ function loadGame() {
 
   applyBackground();
   updateUI();
+  showIntroPopup();
 }
 
 /* =========================
-   BACKGROUND FIX
+   INTRO POPUP
+========================= */
+
+function showIntroPopup() {
+  const title = document.getElementById("intro-title");
+  const text = document.getElementById("intro-text");
+  const popup = document.getElementById("intro-popup");
+
+  const descriptions = {
+    earth: "Earth Sprouts love hydration, calm spaces, and steady care.",
+    moon: "Moon Sprouts are quiet companions who thrive at night and prefer gentle attention.",
+    star: "Star Sprouts glow with energy and love warmth, play, and attention."
+  };
+
+  const type = pet?.pet || "earth";
+
+  title.innerText = `Meet ${pet.name} 🌱`;
+  text.innerText = `You chose a ${type} sprout. ${descriptions[type]}`;
+
+  popup.classList.remove("hidden");
+}
+
+function closeIntro() {
+  document.getElementById("intro-popup")?.classList.add("hidden");
+}
+
+/* =========================
+   BACKGROUND
 ========================= */
 
 function applyBackground() {
   const bg = document.getElementById("background");
 
-  const backgrounds = {
-    forest: "forest.jpg",
-    night: "night.jpg",
-    cottage: "cottage.jpg"
-  };
-
-  bg.style.backgroundImage = `url('${backgrounds[pet.background]}')`;
+  bg.style.backgroundImage =
+    `url('${backgroundImages[pet.background]}')`;
 }
 
 /* =========================
@@ -148,7 +173,6 @@ function savePet() {
 
 function loadPet() {
   const data = localStorage.getItem("cosyPet");
-
   if (!data) return;
 
   pet = JSON.parse(data);
@@ -159,19 +183,20 @@ function loadPet() {
 loadPet();
 
 /* =========================
-   BACKGROUND MUSIC
+   MUSIC
 ========================= */
+
 const music = document.getElementById("bg-music");
 let musicEnabled = true;
 
 function startMusic() {
+  if (!music) return;
   music.volume = 0.4;
-  music.play().catch(() => {
-    // autoplay blocked until interaction
-  });
+
+  music.play().catch(() => {});
 }
 
-document.getElementById("toggle-music").onclick = () => {
+function toggleMusic() {
   musicEnabled = !musicEnabled;
 
   if (musicEnabled) {
@@ -179,39 +204,56 @@ document.getElementById("toggle-music").onclick = () => {
   } else {
     music.pause();
   }
-};
+}
 
 /* =========================
-   SETTINGS MODAL LOGIC
+   SETTINGS
 ========================= */
+
 const modal = document.getElementById("settings-modal");
 
 function openSettings() {
-  modal.classList.remove("hidden");
+  modal?.classList.remove("hidden");
 }
 
 function closeSettings() {
-  modal.classList.add("hidden");
+  modal?.classList.add("hidden");
 }
 
-document.getElementById("settings-btn-setup").onclick = openSettings;
-document.getElementById("settings-btn-game").onclick = openSettings;
-document.getElementById("close-settings").onclick = closeSettings;
-
-/* =========================
-   SETTINGS MODAL LOGIC - ACCESSABILITY OPTIONS
-========================= */
-
 let highContrast = false;
-
-document.getElementById("toggle-contrast").onclick = () => {
-  highContrast = !highContrast;
-  document.body.classList.toggle("high-contrast", highContrast);
-};
-
 let reducedMotion = false;
 
-document.getElementById("toggle-reduced-motion").onclick = () => {
+function toggleContrast() {
+  highContrast = !highContrast;
+  document.body.classList.toggle("high-contrast", highContrast);
+}
+
+function toggleMotion() {
   reducedMotion = !reducedMotion;
   document.body.classList.toggle("reduced-motion", reducedMotion);
-};
+}
+
+function restartGame() {
+  localStorage.removeItem("cosyPet");
+  location.reload();
+}
+
+/* =========================
+   DOM WIRING (SAFE)
+========================= */
+
+window.addEventListener("DOMContentLoaded", () => {
+
+  document.getElementById("settings-btn-setup")?.addEventListener("click", openSettings);
+  document.getElementById("settings-btn-game")?.addEventListener("click", openSettings);
+
+  document.getElementById("close-settings")?.addEventListener("click", closeSettings);
+
+  document.getElementById("toggle-music")?.addEventListener("click", toggleMusic);
+  document.getElementById("toggle-contrast")?.addEventListener("click", toggleContrast);
+  document.getElementById("toggle-reduced-motion")?.addEventListener("click", toggleMotion);
+
+  document.getElementById("restart-game")?.addEventListener("click", restartGame);
+
+  document.getElementById("close-intro")?.addEventListener("click", closeIntro);
+});

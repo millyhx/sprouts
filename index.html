@@ -10,7 +10,7 @@
 
 <body>
 
-  <!-- AUDIO-->
+  <!-- AUDIO -->
   <audio id="bg-music" loop>
     <source src="assets/music.mp3" type="audio/mpeg">
   </audio>
@@ -19,13 +19,16 @@
 
     <!-- SETUP SCREEN -->
     <div id="setup-screen" class="screen active">
+
+      <!-- settings button (top-right floating) -->
+      <button id="settings-btn-setup" class="settings-btn">⚙️</button>
+
       <div class="card">
 
         <h1 class="title">✨ welcome to ✨</h1>
-        <h1 class="app-title">
-        sprouts
-        </h1>
-        <button id="settings-btn-setup">⚙️</button>
+
+        <h1 class="app-title">sprouts</h1>
+
         <p class="subtitle">create your little pocket companion</p>
 
         <input id="pet-name" type="text" placeholder="Name your pet..." />
@@ -33,73 +36,76 @@
         <label class="label">Choose your Sprout</label>
 
         <div class="options" id="pet-options">
+          <button class="option-btn sprout-card" data-pet="earth">
+            <img src="assets/happy-earth-sprout.png" class="sprout-preview">
+            <span>Earth Sprout</span>
+          </button>
 
-        <button class="option-btn sprout-card" data-pet="earth">
-        <img src="assets/happy-earth-sprout.png" alt="Earth Sprout" class="sprout-preview">
-        <span>Earth Sprout</span>
-        </button>
+          <button class="option-btn sprout-card" data-pet="moon">
+            <img src="assets/happy-moon-sprout.png" class="sprout-preview">
+            <span>Moon Sprout</span>
+          </button>
 
-        <button class="option-btn sprout-card" data-pet="moon">
-        <img src="assets/happy-moon-sprout.png" alt="Moon Sprout" class="sprout-preview">
-        <span>Moon Sprout</span>
-        </button>
-
-        <button class="option-btn sprout-card" data-pet="star">
-        <img src="assets/happy-star-sprout.png" alt="Star Sprout" class="sprout-preview">
-        <span>Star Sprout</span>
-        </button>
-
+          <button class="option-btn sprout-card" data-pet="star">
+            <img src="assets/happy-star-sprout.png" class="sprout-preview">
+            <span>Star Sprout</span>
+          </button>
         </div>
 
         <label class="label">Choose a background</label>
-        <!-- BACKGROUND OPTIONS -->
+
         <div class="options" id="bg-options">
+          <button class="option-btn sprout-card" data-background="forest">
+            <img src="assets/forest-icon.png" class="bg-preview">
+            <span>Forest</span>
+          </button>
 
-        <button class="option-btn sprout-card" data-background="forest">
-        <img src="assets/forest-icon.png" alt="Forest Theme" class="bg-preview">
-        <span>Forest</span>
-        </button>
+          <button class="option-btn sprout-card" data-background="night">
+            <img src="assets/night-icon.png" class="bg-preview">
+            <span>Night</span>
+          </button>
 
-        <button class="option-btn sprout-card" data-background="night">
-        <img src="assets/night-icon.png" alt="Night Theme" class="bg-preview">
-        <span>Night</span>
-        </button>
-
-        <button class="option-btn sprout-card" data-background="cottage">
-        <img src="assets/cottage-icon.png" alt="Cottage Theme" class="bg-preview">
-        <span>Cottage</span>
-        </button>
-
+          <button class="option-btn sprout-card" data-background="cottage">
+            <img src="assets/cottage-icon.png" class="bg-preview">
+            <span>Cottage</span>
+          </button>
         </div>
 
-        <!-- START BUTTON (start disabled by default) -->
         <button id="start-btn" class="primary-btn" disabled>
-        start
+          start
         </button>
 
       </div>
     </div>
 
-    <!-- MAIN PET SCREEN -->
+    <!-- GAME SCREEN -->
     <div id="game-screen" class="screen hidden">
 
+      <!-- settings button (game version) -->
+      <button id="settings-btn-game" class="settings-btn">⚙️</button>
+
+      <!-- intro popup -->
+      <div id="intro-popup" class="modal hidden">
+        <div class="modal-card">
+          <h2 id="intro-title"></h2>
+          <p id="intro-text"></p>
+          <button id="close-intro">Start caring for them 💚</button>
+        </div>
+      </div>
+
       <div class="game-card">
+
         <div class="scene">
-        <div id="background" class="background"></div>
+          <div id="background" class="background"></div>
 
-        <div class="top-info">
-          <h2 id="pet-name-display">Pet Name</h2>
-        </div>
-
-        <div class="pet-area">
-          <div id="pet-sprite" class="pet-sprite">
-            🐱
+          <div class="top-info">
+            <h2 id="pet-name-display">Pet Name</h2>
           </div>
 
-          <div id="mood-text" class="mood">
-            ...
+          <div class="pet-area">
+            <div id="pet-sprite" class="pet-sprite">🐱</div>
+            <div id="mood-text" class="mood">...</div>
           </div>
-        </div>
         </div>
 
         <div class="stats">
@@ -119,10 +125,10 @@
 
   </div>
 
-  <!-- SETTINGS MODAL -->
+  <!-- SETTINGS MODAL (GLOBAL) -->
   <div id="settings-modal" class="modal hidden">
     <div class="modal-card">
-      
+
       <h2>Settings</h2>
 
       <button id="toggle-music">Mute Music</button>
