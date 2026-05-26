@@ -89,6 +89,7 @@ startBtn.addEventListener("click", () => {
 
   savePet();
   loadGame();
+  startMusic();
 });
 
 /* =========================
@@ -156,3 +157,18 @@ function loadPet() {
 
 /* auto-load */
 loadPet();
+
+/* =========================
+   BACKGROUND MUSIC
+========================= */
+const music = document.getElementById("bg-music");
+let musicEnabled = true;
+
+function startMusic() {
+  music.volume = 0.4;
+  music.play().catch(() => {
+    // autoplay blocked until interaction
+  });
+}
+
+
