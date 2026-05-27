@@ -410,6 +410,32 @@ function restartGame() {
   location.reload();
 }
 
+function closeMinigame() {
+  document.getElementById("minigame-modal")?.classList.add("hidden");
+}
+
+//Event listener on the modal so that users can click out of the modal to exit settings.
+function enableBackdropClose(modalEl, closeFn) {
+  if (!modalEl) return;
+
+  modalEl.addEventListener("click", (e) => {
+    // only close if clicking the backdrop, not the inner card
+    if (e.target === modalEl) {
+      closeFn();
+    }
+  });
+}
+
+window.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+
+  // close any open modals
+  closeSettings();
+  closeIntro();
+
+  closeMinigame();
+});
+
 /* =========================
    EVENT WIRING
 ========================= */
@@ -459,6 +485,16 @@ window.addEventListener("DOMContentLoaded", () => {
   if (musicEnabled) {
     startMusic();
   }
+
+  enableBackdropClose(
+    document.getElementById("settings-modal"),
+    closeSettings
+  );
+
+  enableBackdropClose(
+    document.getElementById("intro-popup"),
+    closeIntro
+  );
 
 });
 
