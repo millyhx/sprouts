@@ -1,10 +1,21 @@
 let pet = null;
 
+/* =========================
+   DOM REFERENCES
+========================= */
+
 const setupScreen = document.getElementById("setup-screen");
 const gameScreen = document.getElementById("game-screen");
 
 const startBtn = document.getElementById("start-btn");
 const nameInput = document.getElementById("pet-name");
+
+const modal = document.getElementById("settings-modal");
+const music = document.getElementById("bg-music");
+
+/* =========================
+   STATE
+========================= */
 
 let petConfig = {
   name: "",
@@ -24,8 +35,12 @@ const petSprites = {
   star: "assets/happy-star-sprout.png"
 };
 
+let musicEnabled = true;
+let highContrast = false;
+let reducedMotion = false;
+
 /* =========================
-   OPTION SELECTION SYSTEM
+   OPTION SELECTION
 ========================= */
 
 function handleSelection(containerId, key) {
@@ -51,38 +66,52 @@ handleSelection("pet-options", "pet");
 handleSelection("bg-options", "background");
 
 /* =========================
-   NAME INPUT VALIDATION
+   NAME INPUT
 ========================= */
 
-nameInput.addEventListener("input", () => {
-  let value = nameInput.value.trim();
+nameInput?.addEventListener("input", () => {
+  let value = nameInput.value;
+
   value = value.replace(/[^a-zA-Z0-9\s'-]/g, "");
 
-  petConfig.name = value;
+  petConfig.name = value.trim();
 
   validateForm();
 });
 
 /* =========================
-   FORM VALIDATION
+   VALIDATION
 ========================= */
 
 function validateForm() {
-  const nameValid =
-    petConfig.name.length >= 2 &&
-    petConfig.name.length <= 12;
+  const name = (petConfig.name || "").trim();
 
-  const petValid = petConfig.pet !== "";
-  const bgValid = petConfig.background !== "";
+  const nameValid = name.length >= 2 && name.length <= 12;
+  const petValid = !!petConfig.pet;
+  const bgValid = !!petConfig.background;
 
-  startBtn.disabled = !(nameValid && petValid && bgValid);
+  const isValid = nameValid && petValid && bgValid;
+
+  startBtn.disabled = !isValid;
+
+  if (!nameValid) {
+    startBtn.textContent = "Enter a name";
+  } else if (!petValid) {
+    startBtn.textContent = "Choose a sprout";
+  } else if (!bgValid) {
+    startBtn.textContent = "Choose a background";
+  } else {
+    startBtn.textContent = "Start";
+  }
 }
+
+validateForm();
 
 /* =========================
    START GAME
 ========================= */
 
-startBtn.addEventListener("click", () => {
+startBtn?.addEventListener("click", () => {
   if (startBtn.disabled) return;
 
   pet = {
@@ -92,7 +121,8 @@ startBtn.addEventListener("click", () => {
     hunger: 70,
     happiness: 70,
     energy: 70,
-    lastUpdated: Date.now()
+    lastUpdated: Date.now(),
+    introSeen: false
   };
 
   savePet();
@@ -106,16 +136,22 @@ startBtn.addEventListener("click", () => {
 
 function loadGame() {
   setupScreen.classList.remove("active");
-  setupScreen.classList.add("hidden");
-
   gameScreen.classList.add("active");
 
   document.getElementById("pet-name-display").innerText = pet.name;
-  document.getElementById("pet-sprite-img").src = petSprites[pet.pet];
+
+  const spriteImg = document.getElementById("pet-sprite");
+  if (spriteImg) spriteImg.src = petSprites[pet.pet];
 
   applyBackground();
   updateUI();
-  showIntroPopup();
+
+  // ONLY show intro once ever per pet
+  if (!pet.introSeen) {
+    showIntroPopup();
+    pet.introSeen = true;
+    savePet();
+  }
 }
 
 /* =========================
@@ -123,9 +159,9 @@ function loadGame() {
 ========================= */
 
 function showIntroPopup() {
+  const popup = document.getElementById("intro-popup");
   const title = document.getElementById("intro-title");
   const text = document.getElementById("intro-text");
-  const popup = document.getElementById("intro-popup");
 
   const descriptions = {
     earth: "Earth Sprouts love hydration, calm spaces, and steady care.",
@@ -133,10 +169,19 @@ function showIntroPopup() {
     star: "Star Sprouts glow with energy and love warmth, play, and attention."
   };
 
-  const type = pet?.pet || "earth";
+  const themes = {
+    forest: "a peaceful forest theme.",
+    night: "a calm night theme.",
+    cottage: "a cosy cottage theme."
+  };
+
+  const type = pet.pet;
+  const theme = themes[pet.background];
 
   title.innerText = `Meet ${pet.name} 🌱`;
-  text.innerText = `You chose a ${type} sprout. ${descriptions[type]}`;
+  text.innerText =
+    `You chose a ${type} sprout. ${descriptions[type]} ` +
+    `You also chose ${theme}.`;
 
   popup.classList.remove("hidden");
 }
@@ -151,13 +196,14 @@ function closeIntro() {
 
 function applyBackground() {
   const bg = document.getElementById("background");
+  if (!bg) return;
 
   bg.style.backgroundImage =
     `url('${backgroundImages[pet.background]}')`;
 }
 
 /* =========================
-   UI UPDATE
+   UI
 ========================= */
 
 function updateUI() {
@@ -166,7 +212,7 @@ function updateUI() {
   document.getElementById("energy-bar").style.width = pet.energy + "%";
 
   document.getElementById("mood-text").innerText =
-    "Your pet is watching you...";
+    "Your sprout is watching you...";
 }
 
 /* =========================
@@ -192,31 +238,24 @@ loadPet();
    MUSIC
 ========================= */
 
-const music = document.getElementById("bg-music");
-let musicEnabled = true;
-
 function startMusic() {
   if (!music) return;
-  music.volume = 0.4;
 
+  music.volume = 0.4;
   music.play().catch(() => {});
 }
 
 function toggleMusic() {
   musicEnabled = !musicEnabled;
 
-  if (musicEnabled) {
-    music.play();
-  } else {
-    music.pause();
-  }
+  if (!music) return;
+
+  musicEnabled ? music.play() : music.pause();
 }
 
 /* =========================
    SETTINGS
 ========================= */
-
-const modal = document.getElementById("settings-modal");
 
 function openSettings() {
   modal?.classList.remove("hidden");
@@ -225,9 +264,6 @@ function openSettings() {
 function closeSettings() {
   modal?.classList.add("hidden");
 }
-
-let highContrast = false;
-let reducedMotion = false;
 
 function toggleContrast() {
   highContrast = !highContrast;
@@ -245,12 +281,13 @@ function restartGame() {
 }
 
 /* =========================
-   DOM WIRING (SAFE)
+   EVENT WIRING
 ========================= */
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  document.getElementById("settings-btn-setup")?.addEventListener("click", openSettings);
+  // settings buttons
+  document.getElementById("settings-btn")?.addEventListener("click", openSettings);
   document.getElementById("settings-btn-game")?.addEventListener("click", openSettings);
 
   document.getElementById("close-settings")?.addEventListener("click", closeSettings);
