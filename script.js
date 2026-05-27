@@ -14,10 +14,6 @@ const modal = document.getElementById("settings-modal");
 const music = document.getElementById("bg-music");
 
 /* =========================
-   STATE
-========================= */
-
-/* =========================
    MINIGAME STATE
 ========================= */
 
@@ -153,9 +149,11 @@ startBtn?.addEventListener("click", () => {
   };
 
   savePet();
+
+  startMusic();
+
   showGenerationScreen(() => {
     loadGame();
-    startMusic();
   });
 });
 
@@ -343,11 +341,18 @@ function updateSprite() {
    MUSIC
 ========================= */
 
-function startMusic() {
+async function startMusic() {
   if (!music) return;
 
   music.volume = 0.4;
-  music.play().catch(() => {});
+  music.currentTime = 0; // important
+  music.loop = true;
+
+  try {
+    await music.play();
+  } catch (e) {
+    console.log("Autoplay blocked");
+  }
 }
 
 function toggleMusic() {
@@ -355,7 +360,21 @@ function toggleMusic() {
 
   if (!music) return;
 
-  musicEnabled ? music.play() : music.pause();
+  if (musicEnabled) {
+    startMusic();
+  } else {
+    music.pause();
+  }
+
+  localStorage.setItem("musicEnabled", musicEnabled);
+  updateMusicButton();
+}
+
+function updateMusicButton() {
+  const btn = document.getElementById("toggle-music");
+  if (!btn) return;
+
+  btn.innerText = musicEnabled ? "Mute Music" : "Unmute Music";
 }
 
 
@@ -407,6 +426,19 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("restart-game")?.addEventListener("click", restartGame);
 
   document.getElementById("close-intro")?.addEventListener("click", closeIntro);
+
+  const savedMusic = localStorage.getItem("musicEnabled");
+
+  if (savedMusic !== null) {
+    musicEnabled = savedMusic === "true";
+  }
+
+  updateMusicButton();
+
+  if (musicEnabled) {
+    startMusic();
+  }
+
 });
 
 /* =========================
