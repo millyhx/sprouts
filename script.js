@@ -23,13 +23,11 @@ const music = document.getElementById("bg-music");
 
 let foodScore = 0;
 
-const foods = [
-  "🍎",
-  "🍓",
-  "🥕",
-  "🍇",
-  "🍐",
-  "🌽"
+const genSteps = [
+  { img: "assets/sprout-seed.png", text: "Planting seed..." },
+  { img: "assets/sprout-sprout.png", text: "Something is growing..." },
+  { img: "assets/sprout-bud.png", text: "Almost there..." },
+  { img: "assets/happy-earth-sprout.png", text: "Your Sprout is ready!" }
 ];
 
 let petConfig = {
@@ -45,9 +43,21 @@ const backgroundImages = {
 };
 
 const petSprites = {
-  earth: "assets/happy-earth-sprout.png",
-  moon: "assets/happy-moon-sprout.png",
-  star: "assets/happy-star-sprout.png"
+  earth: {
+    happy: "assets/happy-earth-sprout.png",
+    sad: "assets/sad-earth-sprout.png",
+    tired: "assets/tired-earth-sprout.png"
+  },
+  moon: {
+    happy: "assets/happy-moon-sprout.png",
+    sad: "assets/sad-moon-sprout.png",
+    tired: "assets/tired-moon-sprout.png"
+  },
+  star: {
+    happy: "assets/happy-star-sprout.png",
+    sad: "assets/sad-star-sprout.png",
+    tired: "assets/tired-star-sprout.png"
+  }
 };
 
 let musicEnabled = true;
@@ -143,8 +153,10 @@ startBtn?.addEventListener("click", () => {
   };
 
   savePet();
-  loadGame();
-  startMusic();
+  showGenerationScreen(() => {
+    loadGame();
+    startMusic();
+  });
 });
 
 /* =========================
@@ -195,7 +207,7 @@ function showIntroPopup() {
   const type = pet.pet;
   const theme = themes[pet.background];
 
-  title.innerText = `Meet ${pet.name} 🌱`;
+  title.innerText = `Meet ${pet.name}`;
   text.innerText =
     `You chose a ${type} sprout. ${descriptions[type]} ` +
     `You also chose ${theme}.`;
@@ -230,6 +242,8 @@ function updateUI() {
 
   document.getElementById("mood-text").innerText =
     "Your sprout is watching you...";
+
+  updateSprite(); 
 }
 
 /* =========================
@@ -296,6 +310,34 @@ setInterval(() => {
   savePet();
 
 },15000);
+
+/* =========================
+   SPRITE MOOD
+========================= */
+function updateSprite() {
+  const spriteImg = document.getElementById("pet-sprite");
+  if (!spriteImg || !pet) return;
+
+  let state = "happy";
+
+  if (pet.hunger < 30) {
+    document.getElementById("mood-text").innerText = "Your sprout is hungry...";
+  }
+
+  if (pet.energy < 30) {
+    document.getElementById("mood-text").innerText = "Your sprout is tired...";
+  }
+
+  if (pet.hunger < 30 || pet.happiness < 30) {
+    state = "sad";
+  }
+
+  if (pet.energy < 30) {
+    state = "tired";
+  }
+
+  spriteImg.src = petSprites[pet.pet][state];
+}
 
 /* =========================
    MUSIC
@@ -580,4 +622,47 @@ function celebrate(message){
 
   },1500);
 
+}
+
+function showGenerationScreen(callback) {
+  setupScreen.classList.remove("active");
+
+  const genScreen = document.getElementById("gen-screen");
+  genScreen.classList.add("active");
+
+  const fill = document.getElementById("loading-fill");
+  const text = document.getElementById("gen-text");
+
+  let progress = 0;
+
+  const messages = [
+    "Germinating...",
+    "Waking up seeds...",
+    "Growing roots...",
+    "Almost ready..."
+  ];
+
+  let msgIndex = 0;
+
+  const interval = setInterval(() => {
+    progress += Math.random() * 18 + 8;
+
+    if (progress > 100) progress = 100;
+
+    fill.style.width = progress + "%";
+
+    if (progress > (msgIndex + 1) * 25 && msgIndex < messages.length - 1) {
+      msgIndex++;
+      text.innerText = messages[msgIndex];
+    }
+
+    if (progress === 100) {
+      clearInterval(interval);
+
+      setTimeout(() => {
+        genScreen.classList.remove("active");
+        callback();
+      }, 600);
+    }
+  }, 700);
 }
