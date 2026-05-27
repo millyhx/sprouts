@@ -403,6 +403,10 @@ function toggleMotion() {
 
 function restartGame() {
   localStorage.removeItem("cosyPet");
+  localStorage.removeItem("musicEnabled");
+
+  pet = null;
+
   location.reload();
 }
 
@@ -419,9 +423,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("close-settings")?.addEventListener("click", closeSettings);
 
-  document.getElementById("toggle-music")?.addEventListener("click", toggleMusic);
-  document.getElementById("toggle-contrast")?.addEventListener("click", toggleContrast);
-  document.getElementById("toggle-reduced-motion")?.addEventListener("click", toggleMotion);
+  document.getElementById("toggle-music-switch")?.addEventListener("change", (e) => {
+    const enabled = e.target.checked;
+    musicEnabled = enabled;
+
+    if (enabled) {
+      startMusic();
+    } else {
+      music.pause();
+    }
+
+    localStorage.setItem("musicEnabled", enabled);
+  });
+
+  document.getElementById("toggle-contrast-switch")?.addEventListener("change", () => {
+    toggleContrast();
+  });
+
+  document.getElementById("toggle-motion-switch")?.addEventListener("change", () => {
+    toggleMotion();
+  });
 
   document.getElementById("restart-game")?.addEventListener("click", restartGame);
 
@@ -440,6 +461,21 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+function syncSettingsUI() {
+  const musicToggle = document.getElementById("toggle-music-switch");
+  const contrastToggle = document.getElementById("toggle-contrast-switch");
+  const motionToggle = document.getElementById("toggle-motion-switch");
+
+  if (musicToggle) musicToggle.checked = musicEnabled;
+  if (contrastToggle) contrastToggle.checked = highContrast;
+  if (motionToggle) motionToggle.checked = reducedMotion;
+}
+
+function openSettings() {
+  modal?.classList.remove("hidden");
+  syncSettingsUI();
+}
 
 /* =========================
    FEED MATCH GAME

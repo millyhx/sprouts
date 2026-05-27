@@ -187,9 +187,29 @@
 
       <h2>Settings</h2>
 
-      <button id="toggle-music">Mute Music</button>
-      <button id="toggle-contrast">High Contrast</button>
-      <button id="toggle-reduced-motion">Reduce Motion</button>
+      <div class="setting-row">
+        <span>Music</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle-music-switch">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span>High Contrast</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle-contrast-switch">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span>Reduce Motion</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle-motion-switch">
+          <span class="slider"></span>
+        </label>
+      </div>
 
       <hr>
 
