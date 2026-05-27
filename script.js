@@ -17,6 +17,21 @@ const music = document.getElementById("bg-music");
    STATE
 ========================= */
 
+/* =========================
+   MINIGAME STATE
+========================= */
+
+let foodScore = 0;
+
+const foods = [
+  "🍎",
+  "🍓",
+  "🥕",
+  "🍇",
+  "🍐",
+  "🌽"
+];
+
 let petConfig = {
   name: "",
   pet: "",
@@ -122,7 +137,9 @@ startBtn?.addEventListener("click", () => {
     happiness: 70,
     energy: 70,
     lastUpdated: Date.now(),
-    introSeen: false
+    introSeen: false,
+    streak: 1,
+    lastVisit: new Date().toDateString()
   };
 
   savePet();
@@ -224,15 +241,61 @@ function savePet() {
 }
 
 function loadPet() {
+
   const data = localStorage.getItem("cosyPet");
+
   if (!data) return;
 
   pet = JSON.parse(data);
+
+  updateOfflineStats();
+
   loadGame();
+}
+
+/* =========================
+   OFFLINE STAT DECAY
+========================= */
+
+function updateOfflineStats() {
+
+  const now = Date.now();
+
+  const minutesPassed =
+    (now - pet.lastUpdated) / 60000;
+
+  pet.hunger = Math.max(
+    0,
+    pet.hunger - (minutesPassed * .4)
+  );
+
+  pet.lastUpdated = now;
+
+  savePet();
 }
 
 /* auto-load */
 loadPet();
+
+/* =========================
+   LIVE HUNGER DECAY
+========================= */
+
+setInterval(() => {
+
+  if (!pet) return;
+
+  pet.hunger = Math.max(
+    0,
+    pet.hunger - 1
+  );
+
+  pet.lastUpdated = Date.now();
+
+  updateUI();
+  savePet();
+
+},15000);
 
 /* =========================
    MUSIC
@@ -252,6 +315,8 @@ function toggleMusic() {
 
   musicEnabled ? music.play() : music.pause();
 }
+
+
 
 /* =========================
    SETTINGS
@@ -287,6 +352,7 @@ function restartGame() {
 window.addEventListener("DOMContentLoaded", () => {
 
   // settings buttons
+  document.getElementById("feed-btn")?.addEventListener("click",startFeedGame);
   document.getElementById("settings-btn")?.addEventListener("click", openSettings);
   document.getElementById("settings-btn-game")?.addEventListener("click", openSettings);
 
@@ -300,3 +366,218 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("close-intro")?.addEventListener("click", closeIntro);
 });
+
+/* =========================
+   FEED MATCH GAME
+========================= */
+
+const fruitEmojis = [
+  "🍎","🍓","🍇",
+  "🍐","🍊","🍒"
+];
+
+let flippedCards = [];
+let matchedPairs = 0;
+let lockBoard = false;
+
+function startFeedGame(){
+
+    const modal =
+    document.getElementById(
+      "minigame-modal"
+    );
+
+    const title =
+    document.getElementById(
+      "game-title"
+    );
+
+    const content =
+    document.getElementById(
+      "minigame-content"
+    );
+
+    title.innerText =
+    "Feed your Sprout 🌱";
+
+    content.innerHTML =
+    `<p>Match the fruit pairs!</p>
+     <div id="memory-grid"></div>`;
+
+    modal.classList.remove(
+      "hidden"
+    );
+
+    buildMemoryBoard();
+}
+
+function buildMemoryBoard(){
+
+    const grid =
+    document.getElementById(
+      "memory-grid"
+    );
+
+    matchedPairs = 0;
+    flippedCards = [];
+    lockBoard = false;
+
+    grid.innerHTML = "";
+
+    const cards =
+    [...fruitEmojis,...fruitEmojis]
+    .sort(()=>Math.random()-.5);
+
+    cards.forEach(fruit=>{
+
+        const card =
+        document.createElement(
+          "button"
+        );
+
+        card.className =
+        "memory-card";
+
+        card.dataset.fruit =
+        fruit;
+
+        card.innerText =
+        "?";
+
+        card.addEventListener(
+          "click",
+          ()=>flipCard(card)
+        );
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+function flipCard(card){
+
+    if(lockBoard) return;
+
+    if(
+      flippedCards.includes(card)
+    ) return;
+
+    card.innerText =
+    card.dataset.fruit;
+
+    card.classList.add(
+      "flipped"
+    );
+
+    flippedCards.push(card);
+
+    if(
+      flippedCards.length !== 2
+    ) return;
+
+    checkMatch();
+}
+
+function checkMatch(){
+
+    const [first,second] =
+    flippedCards;
+
+    if(
+      first.dataset.fruit ===
+      second.dataset.fruit
+    ){
+
+        matchedPairs++;
+
+        flippedCards=[];
+
+        if(
+          matchedPairs===6
+        ){
+
+            setTimeout(
+              completeFeedGame,
+              600
+            );
+
+        }
+
+        return;
+    }
+
+    lockBoard=true;
+
+    setTimeout(()=>{
+
+        first.innerText="?";
+        second.innerText="?";
+
+        first.classList.remove(
+          "flipped"
+        );
+
+        second.classList.remove(
+          "flipped"
+        );
+
+        flippedCards=[];
+
+        lockBoard=false;
+
+    },800);
+
+}
+
+function completeFeedGame(){
+
+    pet.hunger =
+    Math.min(
+      100,
+      pet.hunger + 25
+    );
+
+    updateUI();
+    savePet();
+
+    celebrate(
+      "🍓 Your Sprout loved that!"
+    );
+
+    document
+    .getElementById(
+      "minigame-modal"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+/* =========================
+   CELEBRATION
+========================= */
+
+function celebrate(message){
+
+  const mood =
+    document.getElementById(
+      "mood-text"
+    );
+
+  mood.innerText = message;
+
+  mood.classList.add(
+    "celebrate"
+  );
+
+  setTimeout(()=>{
+
+    mood.classList.remove(
+      "celebrate"
+    );
+
+  },1500);
+
+}
