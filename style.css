@@ -26,7 +26,7 @@ body {
 
 /* SETUP MODE background (only when setup screen visible) */
 body:has(#setup-screen.active) {
-  background: url("assets/background.png");
+  background: url("assets/backgrounds/background.png");
   background-size: cover;
   background-position: center;
 }
