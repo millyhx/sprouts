@@ -4,6 +4,7 @@ import { backgroundImages } from "./data/backgrounds.js";
 import { savePet } from "./storage.js";
 import { startMusic } from "./audio.js";
 import { showGenerationScreen } from "./generation.js";
+import { syncMusicSetting } from "./audio.js";
 
 /* =========================
    DOM
@@ -106,7 +107,7 @@ export function setupStartButton() {
 
     savePet();
 
-    startMusic();
+    syncMusicSetting();
 
     showGenerationScreen(() => {
       loadGame();

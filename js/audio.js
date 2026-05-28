@@ -7,6 +7,7 @@ const music = document.getElementById("bg-music");
 
 export async function startMusic() {
   if (!music) return;
+  if (!musicEnabled) return; // 🔥 ADD THIS
 
   music.volume = 0.4;
   music.currentTime = 0;
@@ -35,8 +36,7 @@ export function toggleMusic() {
 }
 
 export function syncMusicSetting() {
-  const savedMusic =
-    localStorage.getItem("musicEnabled");
+  const savedMusic = localStorage.getItem("musicEnabled");
 
   if (savedMusic !== null) {
     setMusicEnabled(savedMusic === "true");
@@ -44,5 +44,7 @@ export function syncMusicSetting() {
 
   if (musicEnabled) {
     startMusic();
+  } else {
+    music.pause();
   }
 }

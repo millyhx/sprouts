@@ -25,6 +25,8 @@ window.addEventListener(
 
     syncMusicSetting();
 
+    document.getElementById("close-intro")?.addEventListener("click", closeIntro);
+
     loadPet();
 
     startDecayLoop();
