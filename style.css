@@ -727,6 +727,64 @@ celebrate .6s ease;
   transition: width 0.2s ease;
 }
 
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+  75% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wiggle {
+  animation: wiggle 0.5s ease;
+}
+
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+  60% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+.bounce {
+  animation: bounce 0.5s ease;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 0.6s ease;
+}
+
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
+
+
+@keyframes squish {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15, 0.85); }
+  100% { transform: scale(1); }
+}
+
+.squish {
+  animation: squish 0.4s ease;
+}
+
 
 /* ===== MOBILE FIX ===== */
 

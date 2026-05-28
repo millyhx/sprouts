@@ -133,6 +133,18 @@ export function loadGame() {
     pet.introSeen = true;
     savePet();
   }
+
+
+}
+
+export function setupSproutInteraction() {
+    const sprout = document.getElementById("pet-sprite");
+
+    if (!sprout) return;
+
+    sprout.addEventListener("click", () => {
+        triggerSproutReaction(sprout);
+    });
 }
 
 /* =========================
@@ -212,4 +224,38 @@ export function showIntroPopup() {
 
 export function closeIntro() {
   document.getElementById("intro-popup")?.classList.add("hidden");
+}
+
+
+/* =========================
+   SPROUT INTERACTIONS
+========================= */
+function triggerSproutReaction(sprout) {
+  const reactions = [
+    "wiggle",
+    "bounce",
+    "spin",
+    "shake",
+    "squish"
+  ];
+
+  const choice =
+    reactions[Math.floor(Math.random() * reactions.length)];
+
+  sprout.classList.remove(
+    "wiggle",
+    "bounce",
+    "spin",
+    "shake",
+    "squish"
+  );
+
+  // force reflow so animation can replay
+  void sprout.offsetWidth;
+
+  sprout.classList.add(choice);
+
+  setTimeout(() => {
+    sprout.classList.remove(choice);
+  }, 600);
 }

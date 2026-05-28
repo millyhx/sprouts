@@ -1,13 +1,9 @@
 import { loadPet } from "./storage.js";
-import { setupSelections } from "./ui.js";
-import { setupNameInput } from "./ui.js";
-import { setupStartButton } from "./ui.js";
-import { validateForm } from "./ui.js";
 import { setupSettingsEvents } from "./settings.js";
 import { syncMusicSetting } from "./audio.js";
 import { startDecayLoop } from "./gameplay.js";
 import { startFeedGame } from "./minigames/memoryGame.js";
-import { closeIntro } from "./ui.js";
+import { validateForm, closeIntro, setupSproutInteraction, setupNameInput, setupSelections, setupStartButton } from "./ui.js";
 
 window.addEventListener(
   "DOMContentLoaded",
@@ -28,6 +24,8 @@ window.addEventListener(
     document.getElementById("close-intro")?.addEventListener("click", closeIntro);
 
     loadPet();
+
+    setupSproutInteraction();
 
     startDecayLoop();
 
