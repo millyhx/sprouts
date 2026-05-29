@@ -5,6 +5,8 @@ import { savePet } from "./storage.js";
 import { startMusic } from "./audio.js";
 import { showGenerationScreen } from "./generation.js";
 import { syncMusicSetting } from "./audio.js";
+import { deathModalShown, setDeathModalShown } from "./state.js";
+
 
 /* =========================
    DOM
@@ -96,9 +98,9 @@ export function setupStartButton() {
       name: petConfig.name,
       pet: petConfig.pet,
       background: petConfig.background,
-      hunger: 70,
-      happiness: 70,
-      energy: 70,
+      hunger: 100,
+      happiness: 100,
+      energy: 100,
       lastUpdated: Date.now(),
       introSeen: false,
       streak: 1,
@@ -164,9 +166,29 @@ export function applyBackground() {
 ========================= */
 
 export function updateUI() {
-  document.getElementById("hunger-bar").style.width = pet.hunger + "%";
-  document.getElementById("happy-bar").style.width = pet.happiness + "%";
-  document.getElementById("energy-bar").style.width = pet.energy + "%";
+
+    function updateBar(barElement, value) {
+        barElement.style.width = value + "%";
+
+        barElement.classList.remove("good", "warning", "danger");
+
+        if (value > 60) {
+            barElement.classList.add("good");
+        } else if (value > 30) {
+            barElement.classList.add("warning");
+        } else {
+            barElement.classList.add("danger");
+        }
+    }
+
+    updateBar(document.getElementById("hunger-bar"), pet.hunger);
+    updateBar(document.getElementById("happy-bar"), pet.happiness);
+    updateBar(document.getElementById("energy-bar"), pet.energy);
+    document.getElementById("hunger-num").innerText = Math.round(pet.hunger);
+    document.getElementById("happy-num").innerText = Math.round(pet.happiness);
+    document.getElementById("energy-num").innerText = Math.round(pet.energy);
+
+
 
   updateSprite();
 }
@@ -189,8 +211,46 @@ export function updateSprite() {
     state = "tired";
   }
 
+    if (pet.dead) {
+        spriteImg.src = "assets/pets/dead-sprout.png";
+
+        if (!deathModalShown) {
+            showDeathModal();
+            setDeathModalShown(true);
+        }
+
+        return;
+    }
+
+
   spriteImg.src = petSprites[pet.pet][state];
 }
+
+export function showDeathModal() {
+  const modal = document.getElementById("minigame-modal");
+  modal.classList.remove("hidden");
+  document.getElementById("game-title").innerText = "Your sprout has wilted...";
+    document.getElementById("minigame-content").innerHTML = `
+    <p id="death-reason"></p>
+    <p id="death-streak"></p>
+    <button id="death-restart-btn" class="primary-btn">Restart Game</button>
+    `;
+    document.getElementById("death-restart-btn").addEventListener("click", () => {
+    document.getElementById("minigame-modal").classList.add("hidden");
+    // call your existing restart logic
+    localStorage.removeItem("cosyPet");
+    localStorage.removeItem("musicEnabled");
+    location.reload();
+    });
+
+    document.getElementById("death-reason").innerText = pet.deathCause;
+
+    document.getElementById("death-streak").innerText =
+  `You cared for your sprout for ${pet.deathStreak} day${pet.deathStreak === 1 ? "" : "s"}.`;
+
+
+}
+
 
 /* =========================
    INTRO POPUP

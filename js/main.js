@@ -1,6 +1,7 @@
 import { loadPet } from "./storage.js";
 import { setupSettingsEvents } from "./settings.js";
-import { syncMusicSetting } from "./audio.js";
+import { syncMusicSetting, startMusic } from "./audio.js";
+import { musicEnabled } from "./state.js";
 import { startDecayLoop } from "./gameplay.js";
 import { startFeedGame } from "./minigames/memoryGame.js";
 import { validateForm, closeIntro, setupSproutInteraction, setupNameInput, setupSelections, setupStartButton } from "./ui.js";
@@ -35,6 +36,10 @@ window.addEventListener(
         "click",
         startFeedGame
       );
+
+    document.body.addEventListener("click", () => {
+      syncMusicSetting();
+    }, { once: true });
 
   }
 );

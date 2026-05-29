@@ -785,6 +785,41 @@ celebrate .6s ease;
   animation: squish 0.4s ease;
 }
 
+.stat-bar {
+  height: 20px;
+  border-radius: 10px;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.good {
+  background-color: #4ade80;
+}
+
+.warning {
+  background-color: #facc15;
+}
+
+.danger {
+  background-color: #f87171;
+}
+
+.bar {
+  position: relative;
+}
+
+.bar-num {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: white;
+  pointer-events: none;
+}
+
+
 
 /* ===== MOBILE FIX ===== */
 
